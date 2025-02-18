@@ -1,0 +1,49 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: hello-world-listener
+spec:
+  triggers:
+    - name: git-push-trigger
+      bindings:
+        - ref: git-binding
+      template:
+        ref: pipeline-template
+
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerBinding
+metadata:
+  name: git-binding
+spec:
+  params:
+    - name: git-repo-url
+      value: "$(body.repository.clone_url)"
+    - name: git-revision
+      value: "$(body.ref)"
+
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: pipeline-template
+spec:
+  params:
+    - name: git-repo-url
+    - name: git-revision
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        generateName: hello-world-pipeline-run-
+      spec:
+        pipelineRef:
+          name: hello-world-pipeline
+        workspaces:
+          - name: shared-data
+            emptyDir: {}
+        params:
+          - name: git-url
+            value: "$(params.git-repo-url)"
+          - name: git-revision
+            value: "$(params.git-revision)"
