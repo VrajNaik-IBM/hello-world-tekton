@@ -1,15 +1,14 @@
 apiVersion: tekton.dev/v1beta1
-kind: PipelineRun
+kind: Pipeline
 metadata:
-  generateName: hello-world-pipeline-run-
+  name: hello-world-pipeline
 spec:
-  pipelineSpec:
-    tasks:
-      - name: hello-task
-        taskSpec:
-          steps:
-            - name: print-hello
-              image: ubuntu
-              script: |
-                #!/bin/sh
-                echo "Hello, World from Tekton!"
+  tasks:
+    - name: hello-task
+      taskSpec:
+        steps:
+          - name: print-hello
+            image: ubuntu
+            script: |
+              #!/bin/sh
+              echo "Hello, World from Tekton!"
