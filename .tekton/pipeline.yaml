@@ -11,4 +11,4 @@ spec:
             image: ubuntu
             script: |
               #!/bin/sh
-              echo "Hello, World from Tekton......!"
+              echo "Hello, World from Tekton.......!"
