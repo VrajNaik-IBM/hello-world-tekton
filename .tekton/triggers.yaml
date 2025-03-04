@@ -137,6 +137,16 @@ spec:
         ref: pipeline-template
 
 ---
+# apiVersion: triggers.tekton.dev/v1beta1
+# kind: TriggerBinding
+# metadata:
+#   name: git-binding
+# spec:
+#   params:
+#     - name: git-repo-url
+#       value: "$(body.repository.clone_url)"
+#     - name: git-revision
+#       value: "$(body.ref)"
 apiVersion: triggers.tekton.dev/v1beta1
 kind: TriggerBinding
 metadata:
@@ -144,9 +154,9 @@ metadata:
 spec:
   params:
     - name: git-repo-url
-      value: "$(body.repository.clone_url)"
+      value: "$(params.REPO_URL)"  # Use the variable defined in Terraform
     - name: git-revision
-      value: "$(body.ref)"
+      value: "$(params.BRANCH_NAME)"  # Use the branch name from Terraform
 
 ---
 apiVersion: triggers.tekton.dev/v1beta1
@@ -169,6 +179,49 @@ spec:
       value: "$(body.text_2)"
 
 ---
+# apiVersion: triggers.tekton.dev/v1beta1
+# kind: TriggerTemplate
+# metadata:
+#   name: pipeline-template
+# spec:
+#   params:
+#     - name: git-repo-url
+#     - name: git-revision
+#     - name: event-payload
+#     - name: custom-param
+#     - name: secret-1
+#     - name: secret-2
+#     - name: text-1
+#     - name: text-2
+#   resourcetemplates:
+#     - apiVersion: tekton.dev/v1beta1
+#       kind: PipelineRun
+#       metadata:
+#         generateName: hello-world-pipeline-run-
+#       spec:
+#         pipelineRef:
+#           name: hello-world-pipeline
+#         workspaces:
+#           - name: shared-data
+#             emptyDir: {}
+#         params:
+#           - name: git-url
+#             value: "$(params.git-repo-url)"
+#           - name: git-revision
+#             value: "$(params.git-revision)"
+#           - name: event-payload
+#             value: "$(params.event-payload)"
+#           - name: custom-param
+#             value: "$(params.custom-param)"
+#           - name: secret-1
+#             value: "$(params.secret-1)"
+#           - name: secret-2
+#             value: "$(params.secret-2)"
+#           - name: text-1
+#             value: "$(params.text-1)"
+#           - name: text-2
+#             value: "$(params.text-2)"
+
 apiVersion: triggers.tekton.dev/v1beta1
 kind: TriggerTemplate
 metadata:
@@ -196,7 +249,7 @@ spec:
             emptyDir: {}
         params:
           - name: git-url
-            value: "$(params.git-repo-url)"
+            value: "$(params.git-repo-url)"  # Referencing the parameter defined earlier
           - name: git-revision
             value: "$(params.git-revision)"
           - name: event-payload
@@ -211,3 +264,4 @@ spec:
             value: "$(params.text-1)"
           - name: text-2
             value: "$(params.text-2)"
+
