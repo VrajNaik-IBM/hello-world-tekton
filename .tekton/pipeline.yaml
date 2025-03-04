@@ -18,13 +18,13 @@ metadata:
   name: hello-world-pipeline
 spec:
   params:
-    - name: secret-1
+    - name: repo-url
       type: string
-    - name: secret-2
+    - name: branch-name
       type: string
-    - name: text-1
+    - name: api-key
       type: string
-    - name: text-2
+    - name: access-token
       type: string
   tasks:
     - name: hello-task
@@ -35,7 +35,7 @@ spec:
             script: |
               #!/bin/sh
               echo "Hello, World from Tekton......!"
-              echo "Text 1: $(params.text-1)"
-              echo "Text 2: $(params.text-2)"
-              echo "Secret 1: $(params.secret-1)"
-              echo "Secret 2: $(params.secret-2)"
+              echo "Repository URL: $(params.repo-url)"
+              echo "Branch Name: $(params.branch-name)"
+              echo "API Key: $(params.api-key)"
+              echo "Access Token: $(params.access-token)"
