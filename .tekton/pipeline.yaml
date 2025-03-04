@@ -1,8 +1,31 @@
+# apiVersion: tekton.dev/v1beta1
+# kind: Pipeline
+# metadata:
+#   name: hello-world-pipeline
+# spec:
+#   tasks:
+#     - name: hello-task
+#       taskSpec:
+#         steps:
+#           - name: print-hello
+#             image: ubuntu
+#             script: |
+#               #!/bin/sh
+#               echo "Hello, World from Tekton......!"
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
   name: hello-world-pipeline
 spec:
+  params:
+    - name: secret-1
+      type: string
+    - name: secret-2
+      type: string
+    - name: text-1
+      type: string
+    - name: text-2
+      type: string
   tasks:
     - name: hello-task
       taskSpec:
@@ -12,3 +35,7 @@ spec:
             script: |
               #!/bin/sh
               echo "Hello, World from Tekton......!"
+              echo "Text 1: $(params.text-1)"
+              echo "Text 2: $(params.text-2)"
+              echo "Secret 1: $(params.secret-1)"
+              echo "Secret 2: $(params.secret-2)"
